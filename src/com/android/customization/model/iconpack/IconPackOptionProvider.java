@@ -18,8 +18,10 @@ package com.android.customization.model.iconpack;
 import static com.android.customization.model.ResourceConstants.ANDROID_PACKAGE;
 import static com.android.customization.model.ResourceConstants.ICONS_FOR_PREVIEW;
 import static com.android.customization.model.ResourceConstants.OVERLAY_CATEGORY_ICON_ANDROID;
+import static com.android.customization.model.ResourceConstants.OVERLAY_CATEGORY_ICON_LAUNCHER;
 import static com.android.customization.model.ResourceConstants.OVERLAY_CATEGORY_ICON_SETTINGS;
 import static com.android.customization.model.ResourceConstants.OVERLAY_CATEGORY_ICON_SYSUI;
+import static com.android.customization.model.ResourceConstants.OVERLAY_CATEGORY_ICON_THEMEPICKER;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -49,6 +51,8 @@ public class IconPackOptionProvider {
     private final List<IconPackOption> mOptions = new ArrayList<>();
     private final List<String> mSysUiIconsOverlayPackages = new ArrayList<>();
     private final List<String> mSettingsIconsOverlayPackages = new ArrayList<>();
+    private final List<String> mLauncherIconsOverlayPackages = new ArrayList<>();
+    private final List<String> mThemePickerIconsOverlayPackages = new ArrayList<>();
 
     public IconPackOptionProvider(Context context, OverlayManagerCompat manager) {
         mContext = context;
@@ -58,6 +62,10 @@ public class IconPackOptionProvider {
                 OVERLAY_CATEGORY_ICON_SYSUI, UserHandle.myUserId(), targetPackages));
         mSettingsIconsOverlayPackages.addAll(manager.getOverlayPackagesForCategory(
                 OVERLAY_CATEGORY_ICON_SETTINGS, UserHandle.myUserId(), targetPackages));
+        mLauncherIconsOverlayPackages.addAll(manager.getOverlayPackagesForCategory(
+                OVERLAY_CATEGORY_ICON_LAUNCHER, UserHandle.myUserId(), targetPackages));
+        mThemePickerIconsOverlayPackages.addAll(manager.getOverlayPackagesForCategory(
+                OVERLAY_CATEGORY_ICON_THEMEPICKER, UserHandle.myUserId(), targetPackages));
         mOverlayPackages = new ArrayList<>();
         mOverlayPackages.addAll(manager.getOverlayPackagesForCategory(OVERLAY_CATEGORY_ICON_ANDROID,
                 UserHandle.myUserId(), ResourceConstants.getPackagesToOverlay(mContext)));
@@ -93,6 +101,14 @@ public class IconPackOptionProvider {
             addOrUpdateOption(optionsByPrefix, overlayPackage, OVERLAY_CATEGORY_ICON_SETTINGS);
         }
 
+        for (String overlayPackage : mLauncherIconsOverlayPackages) {
+            addOrUpdateOption(optionsByPrefix, overlayPackage, OVERLAY_CATEGORY_ICON_LAUNCHER);
+        }
+
+        for (String overlayPackage : mThemePickerIconsOverlayPackages) {
+            addOrUpdateOption(optionsByPrefix, overlayPackage, OVERLAY_CATEGORY_ICON_THEMEPICKER);
+        }
+
         for (IconPackOption option : optionsByPrefix.values()) {
             if (option.isValid(mContext)) {
                 mOptions.add(option);
@@ -106,7 +122,7 @@ public class IconPackOptionProvider {
         IconPackOption option = null;
         try {
             if (!optionsByPrefix.containsKey(prefix)) {
-                option = new IconPackOption(mPm.getApplicationInfo(overlayPackage, 0).loadLabel(mPm).toString());
+                option = new IconPackOption(mContext, mPm.getApplicationInfo(overlayPackage, 0).loadLabel(mPm).toString());
                 optionsByPrefix.put(prefix, option);
             } else {
                 option = optionsByPrefix.get(prefix);
@@ -128,7 +144,7 @@ public class IconPackOptionProvider {
     }
 
     private void addDefault() {
-        IconPackOption option = new IconPackOption(mContext.getString(R.string.default_theme_title), true);
+        IconPackOption option = new IconPackOption(mContext, mContext.getString(R.string.default_theme_title), true);
         try {
             for (String iconName : ICONS_FOR_PREVIEW) {
                 option.addIcon(loadIconPreviewDrawable(iconName, ANDROID_PACKAGE));
@@ -139,6 +155,8 @@ public class IconPackOptionProvider {
         option.addOverlayPackage(OVERLAY_CATEGORY_ICON_ANDROID, null);
         option.addOverlayPackage(OVERLAY_CATEGORY_ICON_SYSUI, null);
         option.addOverlayPackage(OVERLAY_CATEGORY_ICON_SETTINGS, null);
+        option.addOverlayPackage(OVERLAY_CATEGORY_ICON_LAUNCHER, null);
+        option.addOverlayPackage(OVERLAY_CATEGORY_ICON_THEMEPICKER, null);
         mOptions.add(option);
     }
 
