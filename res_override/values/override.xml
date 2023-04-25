@@ -29,7 +29,7 @@
         com.android.keyguard.clock
     </string>
 
-    <string name="launcher_overlayable_package" translatable="false">com.android.launcher3</string>
+    <string name="launcher_overlayable_package" translatable="false">com.google.android.apps.nexuslauncher</string>
 
     <!-- List of packages whose icons are used to preview the icon shape for a theme. These are
         typically GMS apps so they should be available in GMS devices. -->

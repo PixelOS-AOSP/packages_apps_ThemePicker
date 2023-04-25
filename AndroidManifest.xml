@@ -39,7 +39,7 @@
         </intent>
         <!-- Intent filter with action used to discover partner -->
         <intent>
-            <action android:name="com.android.launcher3.action.PARTNER_CUSTOMIZATION" />
+            <action android:name="com.google.android.apps.nexuslauncher.action.PARTNER_CUSTOMIZATION" />
         </intent>
         <!-- Intent filter used to query the launcher Activity for grid preview metadata -->
         <intent>
@@ -48,8 +48,8 @@
         </intent>
     </queries>
 
-    <uses-permission android:name="com.android.launcher3.permission.READ_SETTINGS" />
-    <uses-permission android:name="com.android.launcher3.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="com.google.android.apps.nexuslauncher.permission.READ_SETTINGS" />
+    <uses-permission android:name="com.google.android.apps.nexuslauncher.permission.WRITE_SETTINGS" />
 
     <application
         tools:replace="android:icon,android:name"
